@@ -1,5 +1,6 @@
 var router = require("express").Router();
 const { body, validationResult } = require("express-validator");
+const validateToken = require('../middlewares/validateToken')
 
 router.get( "/get-orders",  require("../controllers/ordersControllers/getOrders"));
 
@@ -42,7 +43,7 @@ router.patch(
 
 //cambio estado por id pedido al siguiente
 router.patch(
-  "/status/:id",
+  "/status/:id",validateToken,
   require("../controllers/statusControllers/pacthStatusOrder")
 );
 

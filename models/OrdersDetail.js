@@ -30,7 +30,7 @@ class OrdersDetailManager {
   
   static async getOrdersDetail(id_state) {
     // console.log(id_state);
-    const queryResponse = await pgClient.query("select pedidos.*,estado.id_status,estado.description from (select products_in_order.id_order,orders.order_date date,orders.order_time time,products_in_order.id_product, products.name, products_in_order.units, products_in_order.price from products_in_order right join orders on orders.id_num_order= products_in_order.id_order inner join products on products.id_product=products_in_order.id_product) as pedidos inner join (select order_status.id_order,status.id_status, status.description  from order_status left join status on order_status.id_status=status.id_status) as estado on pedidos.id_order=estado.id_order where id_status=$1", [id_state]);
+    const queryResponse = await pgClient.query("select pedidos.*,estado.id_status,estado.description from (select products_in_order.id_order,orders.order_date date,orders.order_time time,products_in_order.id_product, products.name, products_in_order.units, products_in_order.price from products_in_order right join orders on orders.id_num_order= products_in_order.id_order inner join products on products.id_product=products_in_order.id_product) as pedidos inner join (select order_status.id_order,status.id_status, status.description  from order_status left join status on order_status.id_status=status.id_status) as estado on pedidos.id_order=estado.id_order where id_status=$1 order by id_order", [id_state]);
     const OrdersDetail = queryResponse.rows;
     return OrdersDetail;
   }

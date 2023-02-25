@@ -41,6 +41,7 @@ const signInController = async (req, res) => {
     });
 
     res.status(201).json({ token, id_user: admin.id_user, username: username });
+
   }
 
   const chef = await ChefManager.getChef(id_user);
