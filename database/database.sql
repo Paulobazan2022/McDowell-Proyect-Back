@@ -126,15 +126,6 @@ select products_in_order.id_order,orders.order_date fecha,orders.id_user,product
 	right join orders on orders.id_num_order= products_in_order.id_order
 	inner join products on products.id_product=products_in_order.id_product	;
 
----con estado y descripcion producto
-	
-select pedidos.*,estado.id_status,estado.description from (
-select products_in_order.id_order,orders.order_date fecha,orders.id_user,products_in_order.id_product, products.name, products_in_order.units, products_in_order.price, products_in_order.coment,  products.stock_day , products.available_stock as stock from products_in_order 
-	right join orders on orders.id_num_order= products_in_order.id_order
-	inner join products on products.id_product=products_in_order.id_product	)  as pedidos
-inner join  (select order_status.id_order,status.id_status, status.description  from order_status 
-                left join status on order_status.id_status=status.id_status) as estado 
-on pedidos.id_order=estado.id_order;
 
 --- tickes  id finalizados
 select * from (select pedidos.*,estado.id_status,estado.description from (
@@ -143,3 +134,23 @@ select products_in_order.id_order,orders.order_date fecha,orders.id_user,product
 	inner join products on products.id_product=products_in_order.id_product	)  as pedidos
 inner join  (select order_status.id_order,status.id_status, status.description  from order_status left join status on order_status.id_status=status.id_status) as estado 
 on pedidos.id_order=estado.id_order )  as tickets  where tickets.id_status=1 and tickets.id_order=1;
+
+---Visualizacion estados por roll para trabajadores
+
+select * from (
+	select users.*, '3,4,5' as state from users right join waiter  on users.id_user= waiter.id_user 
+	union select users.*, '1,2,3' as state from users right join chef on users.id_user= chef.id_user 
+	union select users.*, '1,2,3,4,5' as state from users right join admin on users.id_user= admin.id_user 
+	) as worker where worker.id_user=$1",[user]);
+
+--- con estado y descripcion producto
+	
+select pedidos.*,estado.id_status,estado.description from (
+		select products_in_order.id_order,orders.order_date date,orders.order_time time,products_in_order.id_product, products.name, products_in_order.units, products_in_order.price from products_in_order 
+		right join orders on orders.id_num_order= products_in_order.id_order 
+		inner join products on products.id_product=products_in_order.id_product
+	) as pedidos 
+	inner join (
+		select order_status.id_order,status.id_status, status.description  from order_status 
+		left join status on order_status.id_status=status.id_status
+	) as estado on pedidos.id_order=estado.id_order where id_status=$1 order by id_order", [id_state]);

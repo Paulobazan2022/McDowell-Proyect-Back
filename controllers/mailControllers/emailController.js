@@ -36,6 +36,7 @@ const postEmailOrder = async ({id}) => {
         }
     });
 
+    // datos del mensaje a enviar
 
     let info = await transport.sendMail({
         from: '"McDowell Proyecto" <mcdowellproyecto@gmail.com>', 
